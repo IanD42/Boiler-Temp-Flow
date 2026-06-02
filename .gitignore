@@ -1,0 +1,6 @@
+# Secrets — keep local, never publish
+webrepl_cfg.py
+
+# Python
+__pycache__/
+*.pyc
