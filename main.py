@@ -26,9 +26,6 @@ temperature_data = [[None, None] for _ in range(BUFFER_SIZE)]
 data_index = 0
 data_lock = _thread.allocate_lock()
 
-# Initialize NTP time
-ntptime.settime()
-
 # Hardware Setup
 time.sleep(BOOT_DELAY)  
 i2c = SoftI2C(scl=Pin(22), sda=Pin(21))
@@ -59,6 +56,13 @@ def core0_task():
     """Temperature sampling, data storage, and MQTT publishing."""
     global data_index
     wifi.connect_wifi()  # Ensure ESP32 connects to WiFi
+
+    # Sync clock via NTP now that WiFi is up (was failing at import time, before network)
+    try:
+        ntptime.settime()
+    except Exception as e:
+        print("⚠ NTP time sync failed:", e)
+
     mqtt_client = mqtt.connect_mqtt()  # Connect to MQTT broker
     if mqtt_client is None:
         print("⚠ MQTT connection failed. Retrying in 10 seconds...")
@@ -136,8 +140,6 @@ def core1_task():
         if scroll_pos < -len(scroll_text) * 8:
             scroll_pos = 128
 
-        display.show()
-        time.sleep(DISPLAY_UPDATE_INTERVAL)
         display.show()
         time.sleep(DISPLAY_UPDATE_INTERVAL)
 

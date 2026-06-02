@@ -3,6 +3,7 @@ WIFI_SSID = "XXXXX"       #Replace woth your SSID
 WIFI_PASSWORD = "XXXXXX"  #Replace with your wifi password
 
 # MQTT Configuration
+MQTT_CLIENT_ID = "boiler-sensor"  # Required by mqtt.py — unique ID for this device on the broker
 MQTT_BROKER = "192.168.1.224"
 MQTT_PORT = 1883
 MQTT_USER = "XXXXX"       # Replace woth your MQTT User name as defined in HA
